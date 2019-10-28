@@ -7,7 +7,7 @@ const path = require("path");
 const config = require("../config/index");
 // API routes
 const userRoutes = require("./api/user");
-
+const uploadRoutes = require("./api/upload");
 module.exports = function(app) {
 	// const accessLogStream = fs.createWriteStream(
 	// 	path.join(`${__dirname}/..`, "access.log"),
@@ -19,7 +19,7 @@ module.exports = function(app) {
 		if (whitelist.indexOf(req.header("Origin")) !== -1) {
 			corsOptions = { origin: true, credentials: true }; // reflect (enable) the requested origin in the CORS response
 		} else {
-			corsOptions = { origin: true, credentials: true }; // disable CORS for this request
+			corsOptions = { origin: true, credentials: true };
 		}
 		callback(null, corsOptions); // callback expects two parameters: error and options
 	};
@@ -28,7 +28,6 @@ module.exports = function(app) {
 	app.use(express.urlencoded({ extended: true }));
 	app.use(cookieParser());
 	// app.use(morgan("combined", { stream: accessLogStream }));
-
 	// CORS MIDDLEWARE
 	app.use(cors(corsOptionsDelegate));
 
@@ -50,4 +49,5 @@ module.exports = function(app) {
 
 	// api middlewares
 	app.use("/api/v1/users", userRoutes);
+	app.use("/api/v1/upload", uploadRoutes);
 };

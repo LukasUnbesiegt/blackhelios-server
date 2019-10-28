@@ -6,7 +6,6 @@ const alreadyEmailValidation = value => {
 		email: value
 	}).then(mail => {
 		if (mail) {
-			console.log("happen");
 			return Promise.reject("E-mail already in use");
 		} else {
 			return true;

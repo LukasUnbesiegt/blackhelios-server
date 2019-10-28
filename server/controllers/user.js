@@ -2,6 +2,7 @@ const { User } = require("../models/users/User");
 const UserService = require("../services/UserService");
 const { validationResult } = require("express-validator");
 const { isEmpty } = require("../utils/utils");
+
 const register = function(req, res) {
 	const errors = validationResult(req);
 
@@ -9,9 +10,9 @@ const register = function(req, res) {
 		return res.status(422).json({ errors: errors.array() });
 	} else {
 		UserService.register(req.body)
-			.then(user => {
+			.then(token => {
 				return res.status(200).send({
-					user,
+					token,
 					success: true
 				});
 			})
@@ -47,9 +48,6 @@ const login = function(req, res) {
 };
 
 const fbLogin = function(req, res) {
-	// TO-DO
-	// what if user change email in facebook ??
-	// check accessToken and it matches but no email , we would replace token and give access to it .
 	UserService.fbLogin(req.body)
 		.then(token => {
 			res.send({ success: true, token: token });

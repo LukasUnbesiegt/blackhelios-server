@@ -18,7 +18,14 @@ class UserService {
 					errors.register = "user register error";
 					reject({ errors: errors });
 				} else {
-					resolve({ user: userDoc });
+					userDoc.generateToken((err, user) => {
+						if (err) {
+							errors.register = "error-generate token";
+							reject(errors);
+						} else {
+							resolve(user.token);
+						}
+					});
 				}
 			});
 		});
@@ -85,8 +92,6 @@ class UserService {
 			});
 		});
 	}
-
-	async fbLogin() {}
 
 	async logout(user) {
 		return new Promise((resolve, reject) => {

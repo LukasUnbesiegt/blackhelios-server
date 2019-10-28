@@ -1,88 +1,42 @@
-// const cloudinary = require("cloudinary");
-var aws = require("aws-sdk");
-var multer = require("multer");
-var multerS3 = require("multer-s3");
-const upload = require("../../services/image-upload");
-const S3Upload = upload.any();
-const S3UploadSingle = upload.single("file");
-// cloudinary.config({
-// 	cloud_name: config.CD_CLOUD_NAME,
-// 	api_key: config.CD_CLOUD_API_KEY,
-// 	api_secret: config.CD_CLOUD_API_SECRET
-// });
+const uploadService = require("../../services/UploadService");
+const upload = require("../../misc/image-upload");
+const uploadS3 = upload.any();
 
-const s3 = new aws.S3({
-	endpoint: "sgp1.digitaloceanspaces.com",
-	accessKeyId: process.AWS_ACCESS_KEY_ID,
-	secretAccessKey: process.AWS_ACCESS_KEY_SECRET
-});
-
-exports.S3Upload = function(req, res) {
-	S3Upload(req, res, err => {
-		if (err) {
-			return res.status(422).send({
-				erorrs: [{ title: "Image upload error", detail: err.message }]
+const uploadImagesS3 = function(req, res) {
+	uploadService
+		.uploadImagesS3(req, res)
+		.then(results => {
+			return res.status(200).send({
+				success: true,
+				results: results
 			});
-		}
-		var files = req.files;
-		results = files.map(file => {
-			return {
-				public_id: file.key,
-				url: file.location
-			};
-		});
-
-		res.status(200).send({
-			success: true,
-			results: results
-		});
-	});
-};
-exports.S3UploadSingle = function(req, res) {
-	S3Upload(req, res, err => {
-		if (err) {
-			return res.status(422).send({
-				erorrs: [{ title: "Image upload error", detail: err.message }]
+		})
+		.catch(err => {
+			console.log("err", err);
+			return res.status(500).send({
+				err,
+				success: false
 			});
-		}
-		var file = req.file;
-		const image = {
-			public_id: file.key,
-			url: file.location
-		};
-
-		res.status(200).send({
-			success: true,
-			result: image
 		});
-	});
 };
-
-exports.S3Delete = function(req, res) {
-	const { imageId, productId } = req.params;
-	console.log(imageId);
-	console.log(productId);
-	Product.findOneAndUpdate(
-		{ _id: productId },
-		{ $pull: { images: { public_id: imageId } } },
-		{ upsert: true, new: true },
-		(err, updatedProduct) => {
-			console.log(updatedProduct);
-			if (err) return res.json({ succes: false });
-			res.status(200).send({ success: true, product: updatedProduct });
-		}
-	);
-	var params = { Bucket: "estore", Key: imageId };
-	s3.deleteObject(params, function(err, data) {
-		if (err) console.log(err, err.stack);
-		// error
-		else console.log("deleted"); // deleted
-	});
+const uploadImageS3 = function(req, res) {};
+const S3Delete = function(req, res) {};
+module.exports = {
+	uploadImagesS3,
+	uploadImageS3,
+	S3Delete
 };
 
 /**
  * CLOUDINARY
  */
+// const cloudinary = require("cloudinary");
+
+// cloudinary.config({
+// 	cloud_name: config.CD_CLOUD_NAME,
+// 	api_key: config.CD_CLOUD_API_KEY,
+// 	api_secret: config.CD_CLOUD_API_SECRET
+// });
 
 // exports.singleUpload = function(req, res) {
 // 	cloudinary.v2.uploader.upload(
