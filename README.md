@@ -1,6 +1,6 @@
 ## ESTORE BLACKHELIO - EXPRESS.JS SERVER BOILERPLATE
 
-### September 2019 version
+### December 2019 version
 
 - Authentication [ JWT ]
 - Mongoose Models
