@@ -9,3 +9,4 @@
 - Service Layer [ Oct 14 2019 update]
 - Initial Routes
 - Jest and Supertest for unit testing
+- Jobs Scheduling with Agenda.js
