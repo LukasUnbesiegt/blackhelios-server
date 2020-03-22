@@ -1,14 +1,22 @@
 const express = require("express");
 const http = require("http");
-// *** express server initialization ***
+/**
+ * INITIALIZING APP
+ */
 const app = express();
-// getting  third party  and api middlewares and routes
+
+/**
+ * IMPORTING API ROUTES
+ * IMPORTING DB
+ * IMPORTING JOBS
+ */
 require("./routes/index")(app);
 require("./routes/db")();
 require("./jobs/agenda");
 module.exports = {
   app
 };
+
 if (process.env.NODE_ENV !== "test") {
   app.listen(5000, () => {
     console.log("Boilerplate server at 5000");
