@@ -3,72 +3,72 @@ const UserService = require("../services/UserService");
 const { validationResult } = require("express-validator");
 const { isEmpty } = require("../utils/utils");
 
-const register = function(req, res) {
+const register = function (req, res) {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(422).json({ errors: errors.array() });
   } else {
     UserService.register(req.body)
-      .then(token => {
+      .then((token) => {
         return res.status(200).send({
           token,
-          success: true
+          success: true,
         });
       })
-      .catch(err => {
+      .catch((err) => {
         return res.status(422).send({
           err: err,
-          success: false
+          success: false,
         });
       });
   }
 };
 
-const login = function(req, res) {
+const login = function (req, res) {
   const errors = validationResult(req);
 
   if (!isEmpty(errors.errors)) {
     return res.status(422).json({ errors: errors.array() });
   } else {
     UserService.login(req.body)
-      .then(token => {
+      .then((token) => {
         return res.status(200).send({
           token: token,
-          success: true
+          success: true,
         });
       })
-      .catch(err => {
+      .catch((err) => {
         return res.status(422).send({
           err: err,
-          success: false
+          success: false,
         });
       });
   }
 };
 
-const fbLogin = function(req, res) {
+const fbLogin = function (req, res) {
   UserService.fbLogin(req.body)
-    .then(token => {
+    .then((token) => {
       res.send({ success: true, token: token });
     })
-    .catch(err => {
+    .catch((err) => {
       return res.json({
         success: false,
-        err: err
+        err: err,
       });
     });
 };
 
-const auth = function(req, res) {
+const auth = function (req, res) {
   res.status(200).json({
     email: req.user.email,
     name: req.user.name,
-    authType: "local"
+    authType: "local",
   });
 };
 
-const logout = function(req, res) {
-  UserService.logout(req.user, userData => {
+const logout = function (req, res) {
+  UserService.logout(req.user, (userData) => {
     if (!isEmpty(userData.errors)) {
       return res.status(400).send(userData.errors);
     } else {
@@ -82,5 +82,5 @@ module.exports = {
   auth,
   fbLogin,
   register,
-  login
+  login,
 };

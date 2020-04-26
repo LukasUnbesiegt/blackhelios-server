@@ -11,9 +11,9 @@ const path = require("path");
 const userRoutes = require("./api/user");
 const uploadRoutes = require("./api/upload");
 
-module.exports = function(app) {
+module.exports = function (app, io) {
   let whitelist = [];
-  let corsOptionsDelegate = function(req, callback) {
+  let corsOptionsDelegate = function (req, callback) {
     let corsOptions;
     if (whitelist.indexOf(req.header("Origin")) !== -1) {
       corsOptions = { origin: true, credentials: true }; // reflect (enable) the requested origin in the CORS response
@@ -31,6 +31,8 @@ module.exports = function(app) {
   app.use(cookieParser());
   app.use(cors(corsOptionsDelegate));
 
+  // pass io instance into app instance
+  app.io = io;
   /**
    * SERVE REACT APPS IF SERVER IS NOT STANDALONE
    */

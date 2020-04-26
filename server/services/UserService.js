@@ -10,7 +10,7 @@ class UserService {
         username: username,
         email: email,
         password: password,
-        auth_type: "LOCAL"
+        auth_type: "LOCAL",
       });
 
       user.save((err, userDoc) => {
@@ -40,7 +40,7 @@ class UserService {
             name: name,
             email: email,
             accessToken: accessToken,
-            auth_type: "FACEBOOK"
+            auth_type: "FACEBOOK",
           });
 
           user.save((err, userDoc) => {
